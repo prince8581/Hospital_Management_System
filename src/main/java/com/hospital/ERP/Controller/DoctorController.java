@@ -17,12 +17,19 @@ public class DoctorController {
 
 
 
-     //Add Doctor
+     //Add Doctor (Old 2-step process)
     @PostMapping("/add")
-    public Doctor AddDoctor(@RequestBody DoctorDTO dto){
+    public DoctorResDTO AddDoctor(@RequestBody DoctorDTO dto){
         return doctorService.addDoctor(dto);
 
     }
+
+    // Register Doctor (New 1-step process)
+    @PostMapping("/register")
+    public DoctorResDTO registerDoctor(@RequestBody DoctorRegistrationDTO dto){
+        return doctorService.registerDoctor(dto);
+    }
+
 
     //Set Availability
     @PostMapping("/availability")
@@ -34,14 +41,14 @@ public class DoctorController {
 
     //get All Doctors
     @GetMapping("/alldoctor")
-    public List<Doctor> getAllDoctors(){
+    public List<DoctorResDTO> getAllDoctors(){
         return doctorService.getAllDoctors();
     }
 
 
     //manage Specailization(update Docotor)
     @PutMapping("/specailization")
-    public Doctor updateSpecailization(@RequestBody SpecailizationDTO dto){
+    public DoctorResDTO updateSpecailization(@RequestBody SpecailizationDTO dto){
         return doctorService.manageSpecialization(dto);
     }
 
@@ -94,18 +101,16 @@ public class DoctorController {
         return  doctorService.cancelAppointment(id);
     }
 
+
     //Lab Test (Assign Test)  result me null ja raha hai
     @PostMapping("/assign")
     public LabTestResponseDTO assign(@RequestBody LabTestDTO dto){
         return doctorService.assignTest(dto);
     }
 
-    //upload result
-    @PutMapping("/{id}/result")
-    public LabTestResponseDTO upload(@PathVariable int id, @RequestParam String result){
-        return doctorService.uploadResult(id,result);
-    }
 
+    
+    
     //view patient reports
     @GetMapping("/patient/{patientId}")
     public List<LabTestResponseDTO> getReports(@PathVariable int patientId){

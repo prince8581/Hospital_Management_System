@@ -21,6 +21,8 @@ public class LabTest {
     private TestStatus status;
 
     private String result;
+    
+    private String fileUrl;
 
     public enum TestStatus{
         PENDING,
@@ -73,5 +75,13 @@ public class LabTest {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 }

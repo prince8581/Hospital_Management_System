@@ -15,6 +15,7 @@ public class PharmacyMedicineController {
     @Autowired
     private PharmacyMedicineService pharmacyMedicineService;
 
+
     //add medicine
     @PostMapping("/addMedicine")
     public PharmacyMedicineResDTO addMedicine(@RequestBody PharmacyMedicineDTO dto){
@@ -32,6 +33,7 @@ public class PharmacyMedicineController {
     public PharmacyMedicineResDTO updateMedicine(@PathVariable int id, @RequestBody PharmacyMedicineDTO dto){
         return pharmacyMedicineService.updateMedicine(id,dto);
     }
+
 
     //Delete medicine
     @DeleteMapping("/{id}/deletemedicine")

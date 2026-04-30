@@ -21,8 +21,8 @@ public class InventoryService {
     @Autowired
     private PharmacyMedicineRepository medicineRepo;
 
-    //Add Stock
 
+    //Add Stock
     public InventoryResDTO addStock(InventoryDTO dto){
 
         PharmacyMedicine pm = medicineRepo.findById(dto.getMedicineId())
@@ -49,9 +49,9 @@ public class InventoryService {
         dto.setQuantity(inv.getQuantity());
         dto.setBatchNo(inv.getBatchNo());
         dto.setExpiryDate(inv.getPharmacyMedicine().getExpiryDate().toString());
-
         return dto;
     }
+
 
     //update Stock
     public InventoryResDTO updateStock(int id,int quantity){

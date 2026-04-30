@@ -8,6 +8,7 @@ public class LabTestResponseDTO {
     private String testName;
     private String status;
     private String result;
+    private String fileUrl;
 
     public int getId() {
         return id;
@@ -55,5 +56,13 @@ public class LabTestResponseDTO {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 }

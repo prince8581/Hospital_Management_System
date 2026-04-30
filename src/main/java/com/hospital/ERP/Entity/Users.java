@@ -23,7 +23,8 @@ public class Users {
         ADMIN,
         SUPERADMIN,
         DOCTOR,
-        PATIENT
+        PATIENT,
+        STAFF
     }
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -32,11 +33,14 @@ public class Users {
         ACTIVE,
         INACTIVE
     }
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
     private LocalDateTime createdAT;
     private LocalDateTime updatedAT;
+
+
 
     public int getId() {
         return id;

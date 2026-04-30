@@ -5,6 +5,7 @@ import com.hospital.ERP.Entity.*;
 import com.hospital.ERP.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class DoctorService {
     @Autowired
     private LabTestRepository labTestRepo;
 
-    public Doctor addDoctor(DoctorDTO dto){
+    public DoctorResDTO addDoctor(DoctorDTO dto){
 
         Optional<Users> userOpt =  userRepo.findById(dto.getUserId());
 
@@ -60,8 +61,44 @@ public class DoctorService {
         doctor.setQualification(dto.getQualification());
         doctor.setConsultationFee(dto.getConsultationFee());
 
-        return doctorRepo.save(doctor);
+        return mapToDoctorResDTO(doctorRepo.save(doctor));
 
+    }
+
+
+    // Single step registration for Doctor (Creates User and Doctor together)
+    @Transactional
+    public DoctorResDTO registerDoctor(DoctorRegistrationDTO dto) {
+        // Check if email exists
+        // assuming userRepo has existsByEmail, let's use it if available or catch error
+        // Actually, let's just save. If email is unique in DB, it will throw DataIntegrityViolationException.
+        // Wait, earlier in SuperAdminService userRepo.existsByEmail() was used!
+        if (userRepo.existsByEmail(dto.getEmail())) {
+            throw new RuntimeException("Email Already Exists");
+        }
+
+        // 1. Create User
+        Users user = new Users();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(dto.getPassword());
+        user.setPhoneNo(dto.getPhoneNo());
+        user.setRole(Users.Role.DOCTOR);
+        user.setStatus(Users.Status.ACTIVE);
+        user.setCreatedAT(java.time.LocalDateTime.now());
+        user.setUpdatedAT(java.time.LocalDateTime.now());
+
+        Users savedUser = userRepo.save(user);
+
+        // 2. Create Doctor
+        Doctor doctor = new Doctor();
+        doctor.setUser(savedUser);
+        doctor.setSpecialization(dto.getSpecialization());
+        doctor.setExperience(dto.getExperience());
+        doctor.setQualification(dto.getQualification());
+        doctor.setConsultationFee(dto.getConsultationFee());
+
+        return mapToDoctorResDTO(doctorRepo.save(doctor));
     }
 
     //Set Availability
@@ -90,20 +127,33 @@ public class DoctorService {
 
 
     //get All Doctors
-    public List<Doctor> getAllDoctors() {
-        return doctorRepo.findAll();
+    public List<DoctorResDTO> getAllDoctors() {
+        return doctorRepo.findAll().stream().map(this::mapToDoctorResDTO).toList();
     }
 
 
     //manage specailization (update doctor)
-    public Doctor manageSpecialization(SpecailizationDTO dto){
+    public DoctorResDTO manageSpecialization(SpecailizationDTO dto){
         Doctor doctor = doctorRepo.findById(dto.getDoctorId()).orElseThrow(()-> new RuntimeException("Doctor not found"));
 
 
         doctor.setSpecialization(dto.getSpecialization());
-        return doctorRepo.save(doctor);
+        return mapToDoctorResDTO(doctorRepo.save(doctor));
 
 
+    }
+
+    // Map Doctor to DoctorResDTO
+    private DoctorResDTO mapToDoctorResDTO(Doctor doctor) {
+        DoctorResDTO resDto = new DoctorResDTO();
+        resDto.setDoctorId(doctor.getId());
+        resDto.setName(doctor.getUser().getName());
+        resDto.setEmail(doctor.getUser().getEmail());
+        resDto.setSpecialization(doctor.getSpecialization());
+        resDto.setExperience(doctor.getExperience());
+        resDto.setQualification(doctor.getQualification());
+        resDto.setConsultationFee(doctor.getConsultationFee());
+        return resDto;
     }
 
 
@@ -297,16 +347,7 @@ public class DoctorService {
 
     }
 
-    //upload result
-    public LabTestResponseDTO uploadResult(int testId, String result){
-        LabTest test = labTestRepo.findById(testId).orElseThrow(() ->   new RuntimeException("Test not found"));
-
-        test.setResult(result);
-        test.setStatus(LabTest.TestStatus.COMPLETED);
-
-        return mapToDTO(labTestRepo.save(test));
-    }
-
+    
 
     //View Patient Reports
     public List<LabTestResponseDTO> getPatientTests(int patientId){

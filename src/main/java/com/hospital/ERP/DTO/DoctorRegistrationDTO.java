@@ -1,37 +1,48 @@
-package com.hospital.ERP.Entity;
+package com.hospital.ERP.DTO;
 
-import jakarta.persistence.*;
+public class DoctorRegistrationDTO {
+    // User Details
+    private String name;
+    private String email;
+    private String password;
+    private long phoneNo;
 
-@Entity
-public class Doctor {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @OneToOne
-    @JoinColumn(name="user_id",referencedColumnName = "id")
-    private Users user;
-
+    // Doctor Details
     private String specialization;
     private int experience;
     private String qualification;
     private double consultationFee;
 
-    public int getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Users getUser() {
-        return user;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUser(Users user) {
-        this.user = user;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public long getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(long phoneNo) {
+        this.phoneNo = phoneNo;
     }
 
     public String getSpecialization() {
