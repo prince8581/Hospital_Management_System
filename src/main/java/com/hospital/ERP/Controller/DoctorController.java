@@ -108,14 +108,13 @@ public class DoctorController {
         return doctorService.assignTest(dto);
     }
 
-
-    
     
     //view patient reports
     @GetMapping("/patient/{patientId}")
     public List<LabTestResponseDTO> getReports(@PathVariable int patientId){
         return doctorService.getPatientTests(patientId);
     }
+
 
 
 }

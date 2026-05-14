@@ -63,4 +63,8 @@ public class StaffController {
             @RequestParam(value = "file", required = false) org.springframework.web.multipart.MultipartFile file) {
         return staffService.uploadResult(id, result, file);
     }
+
+
+
+
 }
