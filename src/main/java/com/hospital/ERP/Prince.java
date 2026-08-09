@@ -6,5 +6,7 @@ public class Prince {
 
 
         String name;
+        int id;
+        int salary;
     }
 }
